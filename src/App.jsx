@@ -1,24 +1,31 @@
 import { Routes, Route } from "react-router-dom";
-import Navbar from "./Navbar";
-import ProductsList from "./ProductsList";
-import CategoryPage from "./CategoryPage";
-import ProductPage from "./ProductPage";
-import CartPage from "./CartPage";
-import Footer from "./Footer";
-import { CartProvider } from "./CartContext"; // import the context
-import AboutPage from "./About";
-import ContactPage from "./Contact";
-import PrivacyPolicyPage from "./PrivacyPolicy";
-import TermsandConditionPage from "./TermsandCondition";
-import ScrollToTop from "./ScrollToTop";
+
+// Components
+import Navbar from "./components/Navbar";
+import Footer from "./components/Footer";
+import ScrollToTop from "./components/ScrollToTop";
+import { CartProvider } from "./components/CartContext";
+
+
+
+// Pages
+import ProductsList from "./pages/ProductsList";
+import CategoryPage from "./pages/CategoryPage";
+import ProductPage from "./pages/ProductPage";
+import CartPage from "./pages/CartPage";
+import AboutPage from "./pages/About";
+import ContactPage from "./pages/Contact";
+import PrivacyPolicyPage from "./pages/PrivacyPolicy";
+import TermsandConditionPage from "./pages/TermsandCondition";
+import AuthPage from "./pages/Auth";
 
 function App() {
   return (
     <CartProvider>
       <div>
         <Navbar />
-         <ScrollToTop />
-        <div className="pt-24"> 
+        <ScrollToTop />
+        <div className="pt-24">
           <Routes>
             <Route path="/" element={<ProductsList />} />
             <Route path="/category/:category" element={<ProductsList />} />
@@ -29,7 +36,8 @@ function App() {
             <Route path="/contact" element={<ContactPage />} />
             <Route path="/privacy" element={<PrivacyPolicyPage />} />
             <Route path="/terms" element={<TermsandConditionPage />} />
-          
+            <Route path="/auth" element={<AuthPage />} />
+
           </Routes>
           <Footer />
         </div>

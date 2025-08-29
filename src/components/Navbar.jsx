@@ -1,14 +1,21 @@
 import { useEffect, useState, useContext } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
-import { CartContext } from "./CartContext"; // ✅ Import context
-import { ShoppingCart } from "lucide-react"; // ✅ Cart icon
+import { CartContext } from "./CartContext"; // Cart context
+import { ShoppingCart } from "lucide-react"; // Cart icon
 
 function Navbar() {
   const [categories, setCategories] = useState([]);
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
-  const { cartItems } = useContext(CartContext); // ✅ Get cart items
+  const { cartItems } = useContext(CartContext);
+
+  // Track logged-in user
+  const [currentUser, setCurrentUser] = useState(null);
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem("currentUser"));
+    setCurrentUser(user);
+  }, []);
 
   useEffect(() => {
     axios
@@ -16,6 +23,12 @@ function Navbar() {
       .then((res) => setCategories(res.data))
       .catch((err) => console.error(err));
   }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem("currentUser");
+    setCurrentUser(null);
+    window.location.href = "/auth"; // redirect to login/signup
+  };
 
   return (
     <nav className="bg-sky-500 p-4 flex justify-between items-center w-full top-0 left-0 z-50 fixed">
@@ -45,7 +58,6 @@ function Navbar() {
                   All
                 </Link>
               </li>
-
               {categories.map((cat) => (
                 <li key={cat}>
                   <Link
@@ -58,6 +70,26 @@ function Navbar() {
                 </li>
               ))}
             </ul>
+          )}
+        </div>
+
+        {/* Login/Signup or Profile */}
+        <div className="flex items-center gap-4 text-white">
+          {!currentUser && (
+            <Link to="/auth" className="hover:underline">
+              Login / Signup
+            </Link>
+          )}
+          {currentUser && (
+            <>
+              <span>Hi, {currentUser.username}</span>
+              <button
+                onClick={handleLogout}
+                className="bg-red-500 px-2 py-1 rounded"
+              >
+                Logout
+              </button>
+            </>
           )}
         </div>
 

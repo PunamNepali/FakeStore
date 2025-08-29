@@ -57,7 +57,7 @@ function CategoryPage() {
         <Link key={product.id} to={`/product/${product.id}`}>
           <div className="border p-4 rounded shadow hover:shadow-lg flex flex-col h-full">
             <img
-              src={product.image }
+              src={product.image ? encodeURI(product.image) : "/placeholder.png"}
               alt={product.title}
               className="h-40 w-full object-contain mb-2"
             />

@@ -1,18 +1,14 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter } from "react-router-dom";
 import App from "./App";
-import { CartProvider } from "./CartContext";
+import { CartProvider } from "./components/CartContext"; // ✅ fixed path
 import "./index.css";
 
-
 ReactDOM.createRoot(document.getElementById("root")).render(
-  <React.StrictMode>
-    <CartProvider> {/* Provide cart context to entire app */}
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
+  <BrowserRouter>
+    <CartProvider>
+      <App />
     </CartProvider>
-  </React.StrictMode>
+  </BrowserRouter>
 );
-

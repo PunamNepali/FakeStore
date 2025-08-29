@@ -1,10 +1,9 @@
 import React from "react";
-import 
 function AboutPage() {
   return (
     <div className="max-w-5xl mx-auto p-4 ">
       <h1 className="text-3xl font-bold mb-6 text-center text-sky-600">
-        Welcome to MyFakeStore!
+        Welcome to MyFakeStore
       </h1>
 
       {/* Who We Are */}
@@ -52,7 +51,7 @@ function AboutPage() {
 
       {/* Closing Line */}
       <p className="text-center text-gray-800 font-medium mt-8">
-        Thank you for visiting MyFakeStore! We hope you enjoy your shopping
+        Thank you for visiting MyFakeStore We hope you enjoy your shopping
         experience and come back often.
       </p>
     </div>
