@@ -5,8 +5,7 @@ import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import ScrollToTop from "./components/ScrollToTop";
 import { CartProvider } from "./components/CartContext";
-
-
+import { AuthProvider } from "./components/AuthContext"; // ✅ add this
 
 // Pages
 import ProductsList from "./pages/ProductsList";
@@ -21,28 +20,29 @@ import AuthPage from "./pages/Auth";
 
 function App() {
   return (
-    <CartProvider>
-      <div>
-        <Navbar />
-        <ScrollToTop />
-        <div className="pt-24">
-          <Routes>
-            <Route path="/" element={<ProductsList />} />
-            <Route path="/category/:category" element={<ProductsList />} />
-            <Route path="/product/:id" element={<ProductPage />} />
-            <Route path="/cart" element={<CartPage />} />
-            <Route path="/categories" element={<CategoryPage />} />
-            <Route path="/about" element={<AboutPage />} />
-            <Route path="/contact" element={<ContactPage />} />
-            <Route path="/privacy" element={<PrivacyPolicyPage />} />
-            <Route path="/terms" element={<TermsandConditionPage />} />
-            <Route path="/auth" element={<AuthPage />} />
-
-          </Routes>
-          <Footer />
+    <AuthProvider> {/*  Wrap everything with AuthProvider */}
+      
+        <div>
+          <Navbar />
+          <ScrollToTop />
+          <div className="pt-24">
+            <Routes>
+              <Route path="/" element={<ProductsList />} />
+              <Route path="/category/:category" element={<ProductsList />} />
+              <Route path="/product/:id" element={<ProductPage />} />
+              <Route path="/cart" element={<CartPage />} />
+              <Route path="/categories" element={<CategoryPage />} />
+              <Route path="/about" element={<AboutPage />} />
+              <Route path="/contact" element={<ContactPage />} />
+              <Route path="/privacy" element={<PrivacyPolicyPage />} />
+              <Route path="/terms" element={<TermsandConditionPage />} />
+              <Route path="/auth" element={<AuthPage />} />
+            </Routes>
+            <Footer />
+          </div>
         </div>
-      </div>
-    </CartProvider>
+      
+    </AuthProvider>
   );
 }
 

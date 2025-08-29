@@ -41,9 +41,9 @@ function ProductPage() {
         {/* Product Image */}
         <div className="flex justify-center items-center w-full md:w-1/2">
           <img
-            src={product.image}
-            alt={product.title}
-            className="h-60 w-full object-contain mb-4"
+           src={product.image ? encodeURI(product.image) : "/placeholder.png"}
+           alt={product.title}
+           className="h-60 w-full object-contain mb-4"
           />
         </div>
 

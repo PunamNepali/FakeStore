@@ -1,11 +1,13 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../components/AuthContext"; // adjust path if needed
 
 function Auth() {
   const [isLogin, setIsLogin] = useState(true); // toggle between login and signup
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+  const { login } = useAuth(); // <-- get login function from context
 
   const handleSignup = () => {
     const users = JSON.parse(localStorage.getItem("users")) || [];
@@ -30,9 +32,9 @@ function Auth() {
     );
 
     if (user) {
-      localStorage.setItem("currentUser", JSON.stringify(user));
+      login(user); // <-- update AuthContext
       alert("Login successful!");
-      navigate("/profile");
+      navigate("/"); // redirect to home or another route
     } else {
       alert("Invalid credentials!");
     }

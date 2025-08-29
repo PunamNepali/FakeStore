@@ -1,8 +1,10 @@
-import { useEffect, useState, useContext } from "react";
+// src/components/Navbar.jsx
+import { useState, useContext, useEffect } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
-import { CartContext } from "./CartContext"; // Cart context
-import { ShoppingCart } from "lucide-react"; // Cart icon
+import { CartContext } from "./CartContext";
+import { ShoppingCart } from "lucide-react";
+import { useAuth } from "./AuthContext"; // Correct relative path
 
 function Navbar() {
   const [categories, setCategories] = useState([]);
@@ -10,12 +12,10 @@ function Navbar() {
 
   const { cartItems } = useContext(CartContext);
 
-  // Track logged-in user
-  const [currentUser, setCurrentUser] = useState(null);
-  useEffect(() => {
-    const user = JSON.parse(localStorage.getItem("currentUser"));
-    setCurrentUser(user);
-  }, []);
+  // Safe access to auth context
+  const auth = useAuth();
+  const currentUser = auth?.currentUser;
+  const logout = auth?.logout;
 
   useEffect(() => {
     axios
@@ -23,12 +23,6 @@ function Navbar() {
       .then((res) => setCategories(res.data))
       .catch((err) => console.error(err));
   }, []);
-
-  const handleLogout = () => {
-    localStorage.removeItem("currentUser");
-    setCurrentUser(null);
-    window.location.href = "/auth"; // redirect to login/signup
-  };
 
   return (
     <nav className="bg-sky-500 p-4 flex justify-between items-center w-full top-0 left-0 z-50 fixed">
@@ -75,16 +69,15 @@ function Navbar() {
 
         {/* Login/Signup or Profile */}
         <div className="flex items-center gap-4 text-white">
-          {!currentUser && (
+          {!currentUser ? (
             <Link to="/auth" className="hover:underline">
               Login / Signup
             </Link>
-          )}
-          {currentUser && (
+          ) : (
             <>
               <span>Hi, {currentUser.username}</span>
               <button
-                onClick={handleLogout}
+                onClick={logout}
                 className="bg-red-500 px-2 py-1 rounded"
               >
                 Logout
