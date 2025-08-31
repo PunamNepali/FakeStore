@@ -1,28 +1,34 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../components/AuthContext"; // adjust path if needed
+import { useAuth } from "../components/AuthContext";
 
 function Auth() {
-  const [isLogin, setIsLogin] = useState(true); // toggle between login and signup
+  const [isLogin, setIsLogin] = useState(true); // toggle login/signup
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+
   const navigate = useNavigate();
-  const { login } = useAuth(); // <-- get login function from context
+  const { login, currentUser } = useAuth();
+
+  // Redirect if already logged in
+  if (currentUser) navigate("/");
 
   const handleSignup = () => {
     const users = JSON.parse(localStorage.getItem("users")) || [];
 
     if (users.find((user) => user.username === username)) {
-      alert("User already exists!");
-      return;
+      setError("User already exists!");
+      return false;
     }
 
     users.push({ username, password });
     localStorage.setItem("users", JSON.stringify(users));
-    alert("Signup successful!");
-    setIsLogin(true); // switch to login form
+    setIsLogin(true);
     setUsername("");
     setPassword("");
+    setError("Signup successful! Please login.");
+    return true;
   };
 
   const handleLogin = () => {
@@ -32,21 +38,23 @@ function Auth() {
     );
 
     if (user) {
-      login(user); // <-- update AuthContext
-      alert("Login successful!");
-      navigate("/"); // redirect to home or another route
+      login(user); // Context + localStorage
+      navigate("/"); // Redirect to home
+      return true;
     } else {
-      alert("Invalid credentials!");
+      setError("Invalid credentials!");
+      return false;
     }
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setError("");
     isLogin ? handleLogin() : handleSignup();
   };
 
   return (
-    <div className="max-w-md mx-auto p-4">
+    <div className="max-w-md mx-auto p-4 mt-10 border rounded shadow">
       {/* Toggle buttons */}
       <div className="flex mb-4">
         <button
@@ -67,7 +75,9 @@ function Auth() {
         </button>
       </div>
 
-      <h2 className="text-2xl mb-4">{isLogin ? "Login" : "Signup"}</h2>
+      <h2 className="text-2xl mb-4 text-center">
+        {isLogin ? "Login" : "Signup"}
+      </h2>
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-3">
         <input
@@ -76,7 +86,7 @@ function Auth() {
           value={username}
           onChange={(e) => setUsername(e.target.value)}
           required
-          className="border p-2"
+          className="border p-2 rounded"
         />
         <input
           type="password"
@@ -84,11 +94,12 @@ function Auth() {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
-          className="border p-2"
+          className="border p-2 rounded"
         />
+        {error && <p className="text-red-500 text-sm">{error}</p>}
         <button
           type="submit"
-          className={`p-2 text-white ${
+          className={`p-2 text-white rounded ${
             isLogin ? "bg-green-500" : "bg-blue-500"
           }`}
         >
