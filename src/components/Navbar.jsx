@@ -25,7 +25,7 @@ function Navbar() {
       .catch((err) => console.error(err));
   }, []);
 
-  // 🔍 Handle Search
+  // Handle Search
   const handleSearch = (e) => {
     e.preventDefault();
     if (search.trim()) {
@@ -41,7 +41,7 @@ function Navbar() {
       </Link>
 
       <div className="flex items-center gap-6">
-        {/* 🔍 Search Bar */}
+        {/* Search Bar */}
         <form onSubmit={handleSearch} className="flex">
           <input
             type="text"

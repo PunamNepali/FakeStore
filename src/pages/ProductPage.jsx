@@ -1,8 +1,8 @@
 import { useEffect, useState, useContext } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { CartContext } from "../components/CartContext";
-
+import { useAuth } from "../components/AuthContext"; // adjust path
 
 function ProductPage() {
   const { id } = useParams();
@@ -10,6 +10,8 @@ function ProductPage() {
   const [quantity, setQuantity] = useState(1);
 
   const { addToCart } = useContext(CartContext);
+  const { currentUser } = useAuth(); //check logged-in user
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (!id) return;
@@ -25,13 +27,20 @@ function ProductPage() {
   const decreaseQty = () => setQuantity((prev) => (prev > 1 ? prev - 1 : 1));
 
   const handleAddToCart = () => {
-    addToCart({ 
+    if (!currentUser) {
+      // Redirect to login if not logged in
+      navigate("/auth");
+      return;
+    }
+
+    addToCart({
       id: product.id,
       title: product.title,
       price: product.price,
       image: product.image,
-      quantity 
+      quantity,
     });
+
     alert(`${product.title} added to cart!`);
   };
 
@@ -41,9 +50,9 @@ function ProductPage() {
         {/* Product Image */}
         <div className="flex justify-center items-center w-full md:w-1/2">
           <img
-           src={product.image ? encodeURI(product.image) : "/placeholder.png"}
-           alt={product.title}
-           className="h-60 w-full object-contain mb-4"
+            src={product.image ? encodeURI(product.image) : "/placeholder.png"}
+            alt={product.title}
+            className="h-60 w-full object-contain mb-4"
           />
         </div>
 
@@ -53,7 +62,7 @@ function ProductPage() {
           <p className="text-orange-600 font-medium mt-2">Rs {product.price}</p>
           <p className="text-xs text-black mt-2">{product.category}</p>
           <p className="text-xs text-yellow-600 mt-1">
-            ⭐ {product.rating.rate} ({product.rating.count})
+            ⭐ {product.rating?.rate || 0} ({product.rating?.count || 0})
           </p>
 
           {/* Quantity */}
