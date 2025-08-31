@@ -11,7 +11,7 @@ function Auth() {
   const navigate = useNavigate();
   const { login, currentUser } = useAuth();
 
-  // Redirect if already logged in
+ 
   if (currentUser) navigate("/");
 
   const handleSignup = () => {
@@ -111,3 +111,4 @@ function Auth() {
 }
 
 export default Auth;
+

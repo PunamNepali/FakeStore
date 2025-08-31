@@ -6,9 +6,9 @@ import { CartProvider } from "./components/CartContext"; // ✅ fixed path
 import "./index.css";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
-  <BrowserRouter>
-    <CartProvider>
-      <App />
-    </CartProvider>
-  </BrowserRouter>
+  
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+
 );

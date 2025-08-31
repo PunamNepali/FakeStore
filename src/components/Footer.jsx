@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 
 function Footer() {
   return (
-    <footer className="bg-sky-500 text-white p-2 text-center  bottom-0 w-full shadow-md">
+    <footer className="bg-sky-500 text-white p-2 text-center bottom-0 w-full shadow-md">
       <p>© {new Date().getFullYear()} MyFakeStore. All rights reserved.</p>
       <div className="flex justify-center gap-4 mt-2">
         <Link to="/about" className="hover:underline">
