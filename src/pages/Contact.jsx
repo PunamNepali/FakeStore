@@ -1,76 +1,90 @@
-import React from "react";
-import emailjs from "emailjs-com";
+import { useState } from "react";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
-function ContactPage() {
-  function sendEmail(e) {
+function Contact() {
+  const [formData, setFormData] = useState({ name: "", email: "", message: "" });
+  const [loading, setLoading] = useState(false);
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
 
-    emailjs
-      .sendForm(
-        "service_fnwnjtf", // Replace with your Service ID
-        "template_3wvxh4u", // Replace with your Template ID
-        e.target,
-        "jAoRTEH8gtHsLnzbm" // Replace with your User ID
-      )
-      .then(
-        (result) => {
-          alert("Message sent successfully!");
-        },
-        (error) => {
-          alert("Failed to send message: " + error.text);
-        }
-      );
+    try {
+      console.log("Sending request with data:", formData);
 
-    e.target.reset(); // clear the form
-  }
+      const res = await fetch("http://localhost:5000/send-email", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+
+      console.log("Response status:", res.status);
+      console.log("Response headers:", res.headers);
+
+      const data = await res.json();
+      console.log("Response data:", data);
+
+      if (res.ok && data.success) {
+        toast.success(" Email sent successfully!");
+        setFormData({ name: "", email: "", message: "" });
+      } else if (res.ok && !data.success) {
+        toast.error(` Failed: ${data.msg || "Unknown error"}`);
+      } else {
+        toast.error(` Server error: ${res.status} ${res.statusText}`);
+      }
+    } catch (error) {
+      console.error("Fetch error:", error);
+      toast.error(" Something went wrong! Check console for details.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
-    <div className="max-w-5xl mx-auto p-6">
-      <h1 className="text-3xl font-bold mb-6 text-center text-sky-600">Contact Us</h1>
-
-      <form onSubmit={sendEmail} className="max-w-lg mx-auto bg-white p-6 rounded shadow-md">
-        <div className="mb-4">
-          <label className="block text-gray-700 font-semibold mb-2">Name</label>
-          <input
-            type="text"
-            name="name"
-            className="w-full border rounded px-3 py-2"
-            placeholder="Your Name"
-            required
-          />
-        </div>
-
-        <div className="mb-4">
-          <label className="block text-gray-700 font-semibold mb-2">Email</label>
-          <input
-            type="email"
-            name="email"
-            className="w-full border rounded px-3 py-2"
-            placeholder="Your Email"
-            required
-          />
-        </div>
-
-        <div className="mb-4">
-          <label className="block text-gray-700 font-semibold mb-2">Message</label>
-          <textarea
-            name="message"
-            className="w-full border rounded px-3 py-2"
-            placeholder="Your Message"
-            rows="5"
-            required
-          ></textarea>
-        </div>
-
+    <div className="max-w-lg mx-auto p-6">
+      <h2 className="text-2xl font-bold mb-4 text-sky-600">Contact Us</h2>
+      <form onSubmit={handleSubmit} className="space-y-3">
+        <input
+          type="text"
+          name="name"
+          placeholder="Your Name"
+          value={formData.name}
+          onChange={handleChange}
+          className="w-full border p-2 rounded"
+          required
+        />
+        <input
+          type="email"
+          name="email"
+          placeholder="Your Email"
+          value={formData.email}
+          onChange={handleChange}
+          className="w-full border p-2 rounded"
+          required
+        />
+        <textarea
+          name="message"
+          placeholder="Your Message"
+          value={formData.message}
+          onChange={handleChange}
+          className="w-full border p-2 rounded"
+          required
+        />
         <button
           type="submit"
-          className="bg-sky-500 text-white font-semibold px-6 py-2 rounded hover:bg-sky-600"
+          disabled={loading}
+          className={`w-full py-2 rounded text-white ${loading ? "bg-gray-400" : "bg-sky-600 hover:bg-sky-700"}`}
         >
-          Send Message
+          {loading ? "Sending..." : "Send Message"}
         </button>
       </form>
     </div>
   );
 }
 
-export default ContactPage;
+export default Contact;

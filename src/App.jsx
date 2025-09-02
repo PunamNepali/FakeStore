@@ -1,5 +1,5 @@
 import { Routes, Route } from "react-router-dom";
-
+import { ToastContainer } from "react-toastify";
 // Components
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
@@ -38,10 +38,12 @@ function App() {
               <Route path="/privacy" element={<PrivacyPolicyPage />} />
               <Route path="/terms" element={<TermsandConditionPage />} />
               <Route path="/auth" element={<AuthPage />} />
+           
             </Routes>
 
             <Footer />
           </div>
+             <ToastContainer position="top-right" autoClose={3000} />
         </div>
       </CartProvider>
     </AuthProvider>
